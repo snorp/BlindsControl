@@ -25,7 +25,7 @@ Blinds blinds(MOTOR_PINS, MOTOR_STEPS_PER_ROTATION, BLINDS_STATE_EEPROM_ADDRESS)
 
 uint8_t lastPosition = 0;
 int8_t direction = 1;
-bool buttonPushed = false;
+volatile bool buttonPushed = false;
 byte lastButtonVal = 1;
 
 void flashLED(void)
@@ -46,6 +46,8 @@ void buttonInterruptHandler()
   if (!val) {
     // Button is down
     buttonPushed = true;
+  } else {
+    buttonPushed = false;
   }
 }
 
@@ -178,11 +180,29 @@ void setup() {
 
 void loop() {
   if (buttonPushed) {
-    buttonPushed = false;
-    flashLED();
-    delay(200);
-    flashLED();
-    blinds.resetOrigin();
+    long pushStart = millis();
+    long pushEnd;
+
+    while (buttonPushed);
+
+    pushEnd = millis();
+
+    if (pushEnd  - pushStart > 2000) {
+      flashLED();
+      delay(200);
+      flashLED();
+      delay(200);
+      flashLED();
+      delay(200);
+      flashLED();
+      node.clearSettings();
+      node.reboot();
+    } else {
+      flashLED();
+      delay(200);
+      flashLED();
+      blinds.resetOrigin();
+    }
   }
 
   node.run();

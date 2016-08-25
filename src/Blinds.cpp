@@ -40,7 +40,7 @@ Blinds::Blinds(uint8_t motorPin1, uint8_t motorPin2, uint8_t motorPin3,
                uint8_t switchPin)
   : _stepsPerRotation(stepsPerRotation)
   , _stateAddress(stateAddress)
-  , _speed(20)
+  , _speed(25)
   , _angles{ 0, 90, 180 }
   , _stepper(AccelStepper::HALF4WIRE, motorPin1, motorPin2, motorPin3, motorPin4)
 {
