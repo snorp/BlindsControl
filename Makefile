@@ -1,16 +1,17 @@
-SERIAL_PORT := /dev/cu.usbserial-DN00Z3UY
+SERIAL_PORT ?= /dev/cu.usbserial-DN00Z3UY
 
+ENV ?= debug
 
 all: build
 
 clean:
-	platformio run -t clean
+	platformio run -e $(ENV) -t clean
 
 build:
-	platformio run
+	platformio run -e $(ENV)
 
 install:
-	platformio run -t upload --upload-port $(SERIAL_PORT)
+	platformio run -e $(ENV) -t upload --upload-port $(SERIAL_PORT)
 
 monitor:
 	platformio serialports monitor --port $(SERIAL_PORT)
